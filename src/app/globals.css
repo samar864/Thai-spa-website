@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 33% 98%; /* Cream/warm beige */
+    --foreground: 20 14% 16%; /* Earthy brown */
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 16%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14% 16%;
+
+    --primary: 154 30% 30%; /* Deep green */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 40 40% 90%; /* Soft warm beige */
+    --secondary-foreground: 154 30% 30%;
+
+    --muted: 40 20% 90%;
+    --muted-foreground: 25 10% 40%;
+
+    --accent: 43 74% 49%; /* Soft gold */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 40 20% 85%;
+    --input: 40 20% 85%;
+    --ring: 154 30% 30%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Custom Utilities for elegant text */
+.font-serif {
+  font-family: 'Playfair Display', serif;
+}
+.font-sans {
+  font-family: 'Inter', sans-serif;
+}

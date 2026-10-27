@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      String   @default("USER") // ADMIN or USER
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  duration    Int      // duration in minutes
+  price       Float    // Price in THB (฿)
+  category    String   // "Thai Massage", "Oil Massage", "Body Treatments", "Foot Treatments", "Couples", "Spa Packages"
+  imageUrl    String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  appointments Appointment[]
+}
+
+model Therapist {
+  id        String   @id @default(cuid())
+  name      String
+  title     String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Appointment {
+  id            String   @id @default(cuid())
+  bookingCode   String   @unique @default(cuid())
+  date          String   // "YYYY-MM-DD"
+  timeSlot      String   // e.g. "11:00 AM"
+  status        String   @default("CONFIRMED") // PENDING, CONFIRMED, COMPLETED, CANCELLED, RESCHEDULED
+  customerName  String
+  customerEmail String
+  customerPhone String
+  guests        Int      @default(1)
+  therapist     String?  @default("Any Available")
+  specialRequest String?
+  
+  serviceId     String
+  service       Service  @relation(fields: [serviceId], references: [id])
+
+  couponCode    String?
+  discountAmount Float   @default(0)
+  totalAmount   Float
+  paymentMethod String   @default("PAY_AT_SPA") // FULL, PARTIAL, PAY_AT_SPA
+  paymentStatus String   @default("PENDING")    // PENDING, PAID
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model BlockedSlot {
+  id        String   @id @default(cuid())
+  date      String   // "YYYY-MM-DD"
+  timeSlot  String?  // null if whole day is blocked
+  reason    String?
+  createdAt DateTime @default(now())
+}
+
+model Offer {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  discount    Float    // percentage discount
+  code        String   @unique
+  minSpend    Float    @default(0)
+  firstVisitOnly Boolean @default(false)
+  categoryLimit String?
+  isActive    Boolean  @default(true)
+  validUntil  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  customer  String
+  rating    Int      @default(5)
+  comment   String
+  treatment String?
+  isApproved Boolean @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Enquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String
+  service   String?
+  date      String?
+  time      String?
+  message   String
+  status    String   @default("NEW") // NEW, CONTACTED
+  createdAt DateTime @default(now())
+}
+
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
